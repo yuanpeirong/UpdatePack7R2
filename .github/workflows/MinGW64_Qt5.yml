@@ -2,8 +2,8 @@ name: MinGW64_Qt5
 
 #本文档中：Qt5采用mingw810_64或mingw810_32编译、小熊猫C++采用最新的mingw64或mingw32编译(均为MSVCRT)
 
-on: workflow_dispatch
-#on: [push, pull_request]
+#on: workflow_dispatch
+on: [push, pull_request]
 
 jobs:
   windows:
