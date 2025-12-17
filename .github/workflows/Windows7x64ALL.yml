@@ -60,6 +60,6 @@ jobs:
     - name: TempRelease
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: temp_${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}
-        release_name: temp_${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}
+        tag_name: temp5_${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}
+        release_name: temp5_${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}
         files: ${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}.7z.*
