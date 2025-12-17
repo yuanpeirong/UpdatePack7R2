@@ -1,0 +1,38 @@
+name: test
+
+#on: workflow_dispatch
+on: [push, pull_request]
+
+env:
+  UpdatePack7R2_VERSION: '25.12.10'
+  FILE_NAME: test
+
+jobs:
+  Windows7x64ALL_UpdatePack7R2:
+    runs-on: windows-latest
+
+    steps:
+    
+    # 检出本仓库
+    - name: Checkout repository
+      uses: actions/checkout@v5
+
+    # 打包
+    - name: Package binaries
+      run: |
+        #ls     #Directory: D:\a\UpdatePack7R2\UpdatePack7R2(即仓库目录)
+        7z a -v10k test.7z ../ -mx=9
+
+    # 上传
+    - uses: actions/upload-artifact@v4
+      with:
+        name: uptest
+        path: test.7z.*
+
+    # 发布镜像
+    - name: TempRelease
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: temp_${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}
+        release_name: temp_${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}
+        files: test.7z.*
