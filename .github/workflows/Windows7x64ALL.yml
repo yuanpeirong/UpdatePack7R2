@@ -13,8 +13,12 @@ jobs:
 
     steps:
 
-    # 下载工具和镜像
-    - name: Get Tools and Wim
+    # 检出本仓库
+    - name: Checkout repository
+      uses: actions/checkout@v5
+
+    # 集成更新
+    - name: UpdatePack7R2 Wim
       run: |
         #ls     #Directory: D:\a\UpdatePack7R2\UpdatePack7R2(即仓库目录)
         #D:\a\UpdatePack7R2                                上级目录，这里当做根目录
@@ -32,8 +36,8 @@ jobs:
         
         ls
 
-        # 下载使用UpdatePack7R2.exe集成更新
-        D:\a\UpdatePack7R2\UpdatePack7R2.exe /ie11 /WimFile=./${{env.FILE_NAME}}.wim /Index=4 /NoUSB /Optimize
+        # 使用UpdatePack7R2.exe集成更新
+        call D:\a\UpdatePack7R2-CPP\UpdatePack7R2-CPP\cmd\Windows7x64ALL.cmd
 
     # 打包
     - name: Package binaries
@@ -46,11 +50,3 @@ jobs:
       with:
         name: ${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}
         path: ${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}.7z
-
-    # 发布
-    - name: TempRelease
-      uses: softprops/action-gh-release@v2
-      with:
-        tag_name: temp_${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}
-        release_name: temp_${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}
-        files: ${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}.7z
