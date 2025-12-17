@@ -47,7 +47,9 @@ jobs:
     - uses: actions/upload-artifact@v4
       with:
         name: ${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}
-        path: ${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}.7z.*
+        path: |
+          ${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}.7z.*
+          C:\WINDOWS\UpdatePack7.log
 
     # 发布
     - name: TempRelease
