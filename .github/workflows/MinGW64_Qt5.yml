@@ -1,0 +1,96 @@
+name: MinGW64_Qt5
+
+#本文档中：Qt5采用mingw810_64或mingw810_32编译、小熊猫C++采用最新的mingw64或mingw32编译(均为MSVCRT)
+
+on: workflow_dispatch
+#on: [push, pull_request]
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        qt_version: ['5.15.18']
+        qt_type: ['static']
+        compiler_version: ["mingw810_1520_32", "mingw810_1520_64"]
+        qt_rp: ["", "_RP"]
+        exclude:
+          - qt_version: '5.15.18'
+            compiler_version: 'mingw810_1520_32'
+            qt_rp: "_RP"
+
+    steps:
+
+    # 检出本仓库
+    - name: Checkout repository
+      uses: actions/checkout@v5
+
+    # 检出RedPanda-CPP仓库
+    - name: Checkout repository of RedPanda-CPP
+      run: |
+        cd ..  #Directory: D:\a\buildRedPanda-CPP
+        git clone https://github.com/royqh1979/RedPanda-CPP.git
+
+    # 安装 编译器和Qt库
+    - name: Setup Compiler and Qt
+      shell: pwsh
+      run: |
+        $qt_v="${{ matrix.qt_version }}"
+        $qt_t="${{ matrix.qt_type }}"
+        $co_v="${{ matrix.compiler_version }}"
+        $qt_r="${{ matrix.qt_rp }}"
+
+        cd ..  #Directory: D:\a\buildRedPanda-CPP
+
+        if ($co_v -eq "mingw810_1520_32"){
+          curl -L -o i686-release-posix-dwarf-msvcrt.7z https://github.com/niXman/mingw-builds-binaries/releases/download/15.2.0-rt_v13-rev0/i686-15.2.0-release-posix-dwarf-msvcrt-rt_v13-rev0.7z
+          7z x D:\a\buildRedPanda-CPP\i686-release-posix-dwarf-msvcrt.7z -oD:\a\buildRedPanda-CPP
+        }
+        if ($co_v -eq "mingw810_1520_64"){
+          curl -L -o x86_64-release-posix-seh-msvcrt.7z https://github.com/niXman/mingw-builds-binaries/releases/download/15.2.0-rt_v13-rev0/x86_64-15.2.0-release-posix-seh-msvcrt-rt_v13-rev0.7z
+          7z x D:\a\buildRedPanda-CPP\x86_64-release-posix-seh-msvcrt.7z -oD:\a\buildRedPanda-CPP
+        }
+
+        if (( $qt_v -eq "5.15.18") -and ($co_v -eq "mingw810_1520_32") -and ($qt_r -eq "" ))
+          { curl -L -o Qt.7z https://github.com/yuanpeirong/buildQt/releases/download/Qt5.15.18_rev0/Qt_5.15.18-static-Release_mingw810_32.7z }
+        if (( $qt_v -eq "5.15.18") -and ($co_v -eq "mingw810_1520_64") -and ($qt_r -eq "" ))
+          { curl -L -o Qt.7z https://github.com/yuanpeirong/buildQt/releases/download/Qt5.15.18_rev0/Qt_5.15.18-static-Release_mingw810_64.7z }
+        if (( $qt_v -eq "5.15.18") -and ($co_v -eq "mingw810_1520_64") -and ($qt_r -eq "_RP" ))
+          { curl -L -o Qt.7z https://github.com/yuanpeirong/buildQt/releases/download/Qt5.15.18_rev0/Qt_5.15.18-static-Release_mingw810_64_RP.7z }
+
+        7z x D:\a\buildRedPanda-CPP\Qt.7z -oD:\a\buildRedPanda-CPP
+
+
+
+    # 构建RedPanda-CPP(调用cmd编译脚本)
+    - name: Build RedPanda-CPP with ${{ matrix.qt_version }}-${{ matrix.compiler_version }}${{ matrix.qt_rp }}
+      shell: cmd
+      run: |
+        setlocal
+        set QT_VERSION=${{ matrix.qt_version }}
+        set QT_TYPE=${{ matrix.qt_type }}
+        set COMPILER_VERSION=${{ matrix.compiler_version }}
+        set QT_RP=${{ matrix.qt_rp }}
+        call D:\a\buildRedPanda-CPP\buildRedPanda-CPP\build\MinGW64_Qt5.cmd %QT_VERSION% %QT_TYPE% %COMPILER_VERSION% %QT_RP%
+
+    # 打包
+    - name: Package binaries
+      run: |
+        #ls     #D:\a\buildRedPanda-CPP\buildRedPanda-CPP(即仓库目录)
+        7z a RedPanda-CPP-Qt${{ matrix.qt_version }}-${{ matrix.qt_type }}-${{ matrix.compiler_version }}${{ matrix.qt_rp }}.7z ../RedPanda-CPP-Qt${{ matrix.qt_version }}-${{ matrix.qt_type }}-${{ matrix.compiler_version }}${{ matrix.qt_rp }} -mx=9
+
+    # 上传
+    - uses: actions/upload-artifact@v4
+      with:
+        name: RedPanda-CPP-Qt${{ matrix.qt_version }}-${{ matrix.qt_type }}-${{ matrix.compiler_version }}${{ matrix.qt_rp }}
+        path: RedPanda-CPP-Qt${{ matrix.qt_version }}-${{ matrix.qt_type }}-${{ matrix.compiler_version }}${{ matrix.qt_rp }}.7z
+
+# =============================================================================
+# 路径说明
+# D:\a\buildRedPanda-CPP\buildRedPanda-CPP    当前目录即仓库目录
+# D:\a\buildRedPanda-CPP                      上级目录，这里当做根目录
+# D:\a\buildRedPanda-CPP\RedPanda-CPP         RedPanda-CPP源代码目录
+# D:\a\buildRedPanda-CPP\mingw64              Qt目录
+# D:\a\buildRedPanda-CPP\6.10.1-static        Qt目录
+# =============================================================================
