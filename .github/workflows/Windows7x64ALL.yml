@@ -42,16 +42,21 @@ jobs:
       run: |
         #ls     #Directory: D:\a\UpdatePack7R2\UpdatePack7R2(即仓库目录)
         7z a -v1800M ${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}.7z ../${{env.FILE_NAME}}.wim -mx=9
+        7z a UpdatePack7log.7z C:\WINDOWS\UpdatePack7.log
 
-    # 上传
+    # 上传日志
+    - uses: actions/upload-artifact@v4
+      with:
+        name: UpdatePack7log
+        path: UpdatePack7log.7z
+
+    # 上传镜像
     - uses: actions/upload-artifact@v4
       with:
         name: ${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}
-        path: |
-          ${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}.7z.*
-          C:\WINDOWS\UpdatePack7.log
+        path: ${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}.7z.*
 
-    # 发布
+    # 发布镜像
     - name: TempRelease
       uses: softprops/action-gh-release@v2
       with:
