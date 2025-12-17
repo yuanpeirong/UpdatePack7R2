@@ -17,8 +17,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v5
 
-    # 集成更新
-    - name: UpdatePack7R2 Wim
+    # 下载工具和镜像
+    - name: Get Tools and Wim
+      shell: pwsh
       run: |
         #ls     #Directory: D:\a\UpdatePack7R2\UpdatePack7R2(即仓库目录)
         #D:\a\UpdatePack7R2                                上级目录，这里当做根目录
@@ -34,10 +35,11 @@ jobs:
         curl -L -o install_Windows7x64ALL_2.7z.002 https://github.com/yuanpeirong/UpdatePack7R2/releases/download/Windows7x64ALL/install_Windows7x64ALL_2.7z.002
         7z x install_Windows7x64ALL_2.7z.001
         
-        ls
-
-        # 使用UpdatePack7R2.exe集成更新
-        call D:\a\UpdatePack7R2-CPP\UpdatePack7R2-CPP\cmd\Windows7x64ALL.cmd
+    # 使用UpdatePack7R2.exe集成更新
+    - name: UpdatePack7R2 Wim
+      shell: cmd
+      run: |
+        D:\a\UpdatePack7R2\UpdatePack7R2.exe /ie11 /WimFile=D:\a\UpdatePack7R2\install_Windows7x64ALL.wim /Index=4 /NoUSB /Optimize
 
     # 打包
     - name: Package binaries
