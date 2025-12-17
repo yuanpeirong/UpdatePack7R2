@@ -28,12 +28,13 @@ jobs:
         # 下载Windows7x64ALL.wim镜像
         curl -L -o install_Windows7x64ALL.zip https://github.com/yuanpeirong/UpdatePack7R2/releases/download/Windows7x64ALL/install_Windows7x64ALL.zip
         curl -L -o install_Windows7x64ALL.z01 https://github.com/yuanpeirong/UpdatePack7R2/releases/download/Windows7x64ALL/install_Windows7x64ALL.z01
-        unzip -q install_Windows7x64ALL.zip
+        zip -F install_Windows7x64ALL.zip --out install_Windows7x64ALL-large.zip
+        unzip -q install_Windows7x64ALL-large.zip
         
         ls
 
         # 下载使用UpdatePack7R2.exe集成更新
-        UpdatePack7R2-25.12.10.exe /ie11 /WimFile=./${{env.FILE_NAME}}.wim /Index=4 /NoUSB /Optimize
+        UpdatePack7R2.exe /ie11 /WimFile=./${{env.FILE_NAME}}.wim /Index=4 /NoUSB /Optimize
 
     # 打包
     - name: Package binaries
