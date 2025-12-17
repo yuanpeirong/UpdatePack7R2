@@ -26,10 +26,9 @@ jobs:
         curl -L -o UpdatePack7R2.exe https://github.com/yuanpeirong/UpdatePack7R2/releases/download/UpdatePack7R2-25.12.10/UpdatePack7R2-25.12.10.exe
 
         # 下载Windows7x64ALL.wim镜像
-        curl -L -o install_Windows7x64ALL.zip https://github.com/yuanpeirong/UpdatePack7R2/releases/download/Windows7x64ALL/install_Windows7x64ALL.zip
-        curl -L -o install_Windows7x64ALL.z01 https://github.com/yuanpeirong/UpdatePack7R2/releases/download/Windows7x64ALL/install_Windows7x64ALL.z01
-        zip -F install_Windows7x64ALL.zip --out install_Windows7x64ALL-large.zip
-        unzip -q install_Windows7x64ALL-large.zip
+        curl -L -o install_Windows7x64ALL_2.7z.001 https://github.com/yuanpeirong/UpdatePack7R2/releases/download/Windows7x64ALL/install_Windows7x64ALL_2.7z.001
+        curl -L -o install_Windows7x64ALL_2.7z.002 https://github.com/yuanpeirong/UpdatePack7R2/releases/download/Windows7x64ALL/install_Windows7x64ALL_2.7z.002
+        7z x install_Windows7x64ALL_2.7z.001
         
         ls
 
