@@ -41,7 +41,7 @@ jobs:
     - name: Package binaries
       run: |
         #ls     #Directory: D:\a\UpdatePack7R2\UpdatePack7R2(即仓库目录)
-        7z a -v1950M ${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}.7z ../${{env.FILE_NAME}}.wim -mx=9
+        7z a -v1950M ${{env.FILE_NAME}}-${{env.UpdatePack7R2_VERSION}}.7z ../${{env.FILE_NAME}}.esd -mx=9
         7z a UpdatePack7log.7z C:\WINDOWS\UpdatePack7.log
 
     # 上传日志
