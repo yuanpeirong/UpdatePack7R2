@@ -27,7 +27,9 @@
 - `cn_windows_7_enterprise_with_sp1_x86_dvd_620153.iso`
 
 ## 关于ISO镜像
-- 本仓库只负责提供集成补丁后的wim镜像，需用户制作ISO文件(2026年1月最终版考虑提供)
-- 如需制作ISO文件，可自行将下载下来的wim镜像，改名为`install.wim`，替换原版`旗舰版`或`企业版`镜像中的`install.wim`
+- 本仓库仅2026年1月最终版提供`ISO镜像`
+- 本仓库提供集成补丁后的`wim镜像`、`esd镜像`
+- 如需自行制作ISO文件，可自行将下载下来的wim镜像，改名为`install.wim`，替换原版`旗舰版`或`企业版`镜像中的`install.wim`
 - 若要显示`简易版(仅x86版本有)`、`家庭普通版`、`家庭高级版`、`专业版`，还需删除原版`旗舰版`镜像中的ei.cfg文件
 - 若要集成`旗舰版+企业版`，还需要增加`install_Windows 7 ENTERPRISE.clg`文件(可从原版`企业版`镜像中提取)
+- `Windows 7`原版`ISO镜像`不支持`esd镜像`。可借用`Windows 8`含以上原版`ISO镜像`将`esd镜像`转换为`ISO镜像`
